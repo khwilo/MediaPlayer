@@ -14,7 +14,7 @@ public class Main extends Application {
         //instantiate Player class
         Player player = new Player("file:///E:/ProgrammingVideos/JohnLegend-Success.mp4");
         //add the player to the scene
-        Scene scene = new Scene(player, 720, 480, Color.BLACK);
+        Scene scene = new Scene(player, 720, 510, Color.BLACK);
         //adding the scene to the stage
         primaryStage.setScene(scene);
         //show the stage

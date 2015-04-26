@@ -15,7 +15,7 @@ public class Player extends BorderPane {
     Media media;
     MediaPlayer player;
     MediaView view;
-
+    MediaBar bar;
     //creating the pane for the player
     Pane pane;
 
@@ -33,6 +33,12 @@ public class Player extends BorderPane {
         //the media pane is present but we need to add it the BorderPane which is our player class
 
         setCenter(pane); //this adds the pane to the center of the player
+
+        bar = new MediaBar(player); //adding the media bar to the player
+
+        setBottom(bar); //adding the bar to the bottom
+
+        setStyle("-fx-background-color: #bfc2c7"); //set the colour for the border pane
 
         //finally make the video play
         player.play();
