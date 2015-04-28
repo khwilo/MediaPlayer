@@ -93,12 +93,24 @@ public class MediaBar extends HBox{
             }
         });
 
+        //set the time slider
         time.valueProperty().addListener(new InvalidationListener(){
             @Override
             public void invalidated(Observable observable){
                 //check if the time slider is pressed
                 if(time.isPressed()){
                     player.seek(player.getMedia().getDuration().multiply(time.getValue() / 100));
+                }
+            }
+        });
+
+        //set the volume slider
+        vol.valueProperty().addListener(new InvalidationListener() {
+            @Override
+            public void invalidated(Observable observable) {
+                //check if the volume is pressed
+                if(vol.isPressed()){
+                    player.setVolume(vol.getValue() / 100);
                 }
             }
         });
