@@ -1,5 +1,10 @@
 package sample;
 
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -52,5 +57,59 @@ public class MediaBar extends HBox{
         getChildren().add(time);
         getChildren().add(volume);
         getChildren().add(vol);
+
+        //set the action for the button
+        playButton.setOnAction(new EventHandler<ActionEvent> (){
+            public void handle(ActionEvent e){
+                //check the status of the media player
+                MediaPlayer.Status status = player.getStatus();
+
+                if(status == MediaPlayer.Status.PLAYING){
+                    if(player.getCurrentTime().greaterThanOrEqualTo(player.getTotalDuration())){
+                        //play the file from the beginning
+                        player.seek(player.getStartTime()); //seek the time
+                        player.play();
+                    }
+                    else{ //pause if not at the end of the file
+                        player.pause();
+                        playButton.setText(">");
+                    }
+                }
+
+                if(status == MediaPlayer.Status.PAUSED || status == MediaPlayer.Status.HALTED || status == MediaPlayer.Status.STOPPED){
+                    //first play the file
+                    player.play();
+                    //set the text of the button
+                    playButton.setText("||");
+                }
+            }
+        });
+
+        //update the time slider
+        player.currentTimeProperty().addListener(new InvalidationListener() {
+            @Override
+            public void invalidated(Observable observable) {
+                updateValues();
+            }
+        });
+
+        time.valueProperty().addListener(new InvalidationListener(){
+            @Override
+            public void invalidated(Observable observable){
+                //check if the time slider is pressed
+                if(time.isPressed()){
+                    player.seek(player.getMedia().getDuration().multiply(time.getValue() / 100));
+                }
+            }
+        });
+    }
+
+    protected void updateValues(){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                time.setValue(player.getCurrentTime().toMillis() / player.getTotalDuration().toMillis() * 100);
+            }
+        });
     }
 }
